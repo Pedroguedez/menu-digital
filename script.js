@@ -6,6 +6,7 @@ const cartTotal = document.getElementById("cart-total");
 const checkoutBtn = document.getElementById("checkout-btn");
 const closeModalBtn = document.getElementById("close-modal-btn");
 const cartCounter = document.getElementById("cart-count");
+const footerTotal = document.getElementById("total-footer");
 const addressInput = document.getElementById("address");
 const addressWarn = document.getElementById("address-warn");
 
@@ -68,7 +69,7 @@ function updateCartModal() {
             <p class="font-medium mt-2">${item.price.toFixed(2)}</p>
             </div>   
                  
-            <button class="remove-btn-item" data-name="${item.name}">
+            <button class="remove-btn-item text-red-600" data-name="${item.name}">
                 Remover
             </button>    
         </div>        
@@ -82,6 +83,10 @@ function updateCartModal() {
         currency: "BRL"
     })
     cartCounter.innerText = cart.length;
+    footerTotal.textContent = total.toLocaleString("pt-BR",{ 
+        style: "currency",
+        currency: "BRL"
+    })
 
 }
 
