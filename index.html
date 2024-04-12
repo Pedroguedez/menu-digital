@@ -27,7 +27,7 @@
             <img src="./assets/logo.jpg" alt="Logo LOCAL"
                 class="w-32 h-32 rounded-full shadow-lg hover:scale-110 duration-200" />
             <h1 class="text-4xl mt-4 mb-2 font-bold text-white">Point do Açaí</h1>
-            <span class="text-white font-medium  ml-4 ">
+            <span class="text-white font-medium  ml-4 text-[10px]">
                 <i class=" fa fa-map-pin  text-lg text-red-500"></i> 
                  <a href="https://www.google.com/maps/place/R.+Eng.+Loja,+11+-+Próspera,+Criciúma+-+SC,+88813-335" target="_blank" rel="noopener noreferrer">
                 R. Eng. Loja, 11 - Próspera, Criciúma - SC, 88813-335
@@ -257,6 +257,8 @@
             <p class="font-bold mt-4">Endereço de entrega:</p>
             <input type="text" placeholder="Digite seu enereço" id="address" class="w-full border-2 p-1 rounded my-1" />
             <p class="text-red-500 hidden" id="address-warn">Digite seu endereço completo!</p>
+            <p class=" text-bold" id="cal-rota"></p>
+            <button id="calculate-route-btn" class="bg-blue-500 text-white px-4 py-1 rounded mt-2">Calcular Rota</button>
             <div class="flex items-center justify-between mt-5 w-full">
                 <button id="close-modal-btn">fecha</button>
                 <button id="checkout-btn" class="bg-green-500 text-white px-4 py-1 rounded">finalizar pedido</button>
