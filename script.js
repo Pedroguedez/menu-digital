@@ -154,21 +154,28 @@ checkoutBtn.addEventListener("click", () => {
     }
 
     //enviar o pedido para api WHATS
-    const cartItems = cart.map((item)=>{
-        return(
-            `
-                ${item.name} 
-             Quantidade : (${item.quantity}) 
-             Preço: R$${item.price}
-             __________________________________
-             `
-        )
-    }).join("");
+      const intro = `
+    Olá, Point do Açaí,
 
-    const message = encodeURIComponent(cartItems)
-    const phone = "48996627446"
+    Gostaria de fazer um pedido do cardápio digital. Segue a lista dos itens que desejo:
+`;
 
-    window.open(`https://wa.me/${phone}?text=${message} Endereço: ${addressInput.value} `, "_blank")
+    const cartItems = cart.map((item) => {
+        return `
+        - Item: ${item.name}
+        - Quantidade: ${item.quantity}
+        - Preço unitário: R$${item.price.toFixed(2)}
+    `;
+    }).join("\n");
+
+    const messageContent = `${intro}\n${cartItems}
+    Total: ${cartTotal.textContent} 
+    Endereço: ${addressInput.value}`;
+    const message = encodeURIComponent(messageContent);
+
+    const phone = "48996627446";
+
+    window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
 
     cart = [];
     addressInput.value = ""
@@ -192,3 +199,33 @@ if(isOpen){
     spanItem.classList.remove("bg-green-600");
     spanItem.classList.add("bg-red-500");
 }
+
+document.getElementById('calculate-route-btn').addEventListener('click', function() {
+    const address = document.getElementById('address').value; // Usar o endereço completo do campo oculto
+    const yourAddress = "R. Eng. Loja, 11 - Próspera, Criciúma - SC, 88813-335"; // Substitua pelo endereço do seu estabelecimento
+    const apiKey = "AIzaSyCKk-oo_LmFnLh361pMbFrs2SliWEL9ISo"; 
+
+    const distanceMatrixUrl = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(address)}&destinations=${encodeURIComponent(yourAddress)}&key=${apiKey}`;
+
+    fetch(distanceMatrixUrl)
+        .then(response => response.json())
+        .then(data => {
+            // Verificar se a resposta da API é válida
+            if (data.rows && data.rows.length > 0 && data.rows[0].elements && data.rows[0].elements.length > 0) {
+                const distanceText = data.rows[0].elements[0].distance.text; // Distância em texto (ex: "5.2 km")
+                const distanceValue = data.rows[0].elements[0].distance.value; // Distância em metros
+
+                // Calcular o valor da entrega com base na distância (exemplo: R$ 1 por km)
+                const deliveryRatePerKm = 2.0; // Valor da entrega por quilômetro
+                const deliveryCost = (distanceValue / 1000) * deliveryRatePerKm; // Converter a distância de metros para quilômetros
+
+                // Atualizar o valor da entrega no seu cardápio digital (por exemplo, no elemento com ID 'cal-rota')
+                document.getElementById('cal-rota').textContent = `Distância: ${distanceText}, Taxa de Entrega: R$ ${deliveryCost.toFixed(2)}`;
+            } else {
+                console.error("Não foi possível obter informações da distância.");
+            }
+        })
+        .catch(error => {
+            console.error("Erro ao calcular a distância:", error);
+        });
+});
