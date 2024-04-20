@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKk-oo_LmFnLh361pMbFrs2SliWEL9ISo&callback=initMap"   defer></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -44,7 +45,7 @@
       <h2 class=" text-2xl md:text-3xl font-bold text-center mt-9 mb-6 ">
         Itens mais populares
     </h2>
-    <div class="overflow-x-auto whitespace-nowrap p-2">
+    <div class="overflow-x-auto whitespace-nowrap p-2" id="popular-Itens">
         <!-- Item 1 -->
         <div class="inline-block mr-4">
             <div class="flex flex-col gap-2 bg-white p-4 rounded-md hover:shadow-lg transition duration-300">
@@ -254,11 +255,13 @@
             <div id="cart-items" class="flex justify-between mb-2 flex-col"></div>
 
             <p class="font-bold">Total <span id="cart-total">0.00</span></p>
+            <p class="font-bold mt-4">Nome:</p>
+            <input type="text" placeholder="Digite seu nome" id="clientName" class="w-full border-2 p-1 rounded my-1" />
             <p class="font-bold mt-4">Endereço de entrega:</p>
             <input type="text" placeholder="Digite seu enereço" id="address" class="w-full border-2 p-1 rounded my-1" />
             <p class="text-red-500 hidden" id="address-warn">Digite seu endereço completo!</p>
             <p class=" text-bold" id="cal-rota"></p>
-            <button id="calculate-route-btn" class="bg-blue-500 text-white px-4 py-1 rounded mt-2">Calcular Rota</button>
+            <button id="calculate-route-btn" class="bg-blue-500">Calcular Rota</button>
             <div class="flex items-center justify-between mt-5 w-full">
                 <button id="close-modal-btn">fecha</button>
                 <button id="checkout-btn" class="bg-green-500 text-white px-4 py-1 rounded">finalizar pedido</button>

@@ -1,4 +1,5 @@
 const menu = document.getElementById("menu");
+const popularItens = document.getElementById("popular-Itens");
 const cartBtn = document.getElementById("cart-btn");
 const cartModal = document.getElementById("cart-modal");
 const cartItemsContainer = document.getElementById("cart-items");
@@ -25,6 +26,15 @@ cartModal.addEventListener("click", (event) => {
 closeModalBtn.addEventListener("click", () => {
     cartModal.style.display = "none"
 })
+popularItens.addEventListener("click", (event) => {
+    let parentButton = event.target.closest(".add-to-cart-btn");
+    if (parentButton) {
+        const name = parentButton.getAttribute("data-name")
+        const price = parseFloat(parentButton.getAttribute("data-price"))
+
+        addToCart(name, price)
+    }
+});
 menu.addEventListener("click", (event) => {
     let parentButton = event.target.closest(".add-to-cart-btn");
     if (parentButton) {
@@ -136,9 +146,9 @@ checkoutBtn.addEventListener("click", () => {
             text: "Ops o restaurante está fechado no momento!",
             duration: 3000,
             close: true,
-            gravity: "top", // `top` or `bottom`
-            position: "right", // `left`, `center` or `right`
-            stopOnFocus: true, // Prevents dismissing of toast on hover
+            gravity: "top", 
+            position: "right", 
+            stopOnFocus: true, 
             style: {
               background: "#ef4444",
             },}).showToast();
@@ -200,32 +210,30 @@ if(isOpen){
     spanItem.classList.add("bg-red-500");
 }
 
-document.getElementById('calculate-route-btn').addEventListener('click', function() {
-    const address = document.getElementById('address').value; // Usar o endereço completo do campo oculto
-    const yourAddress = "R. Eng. Loja, 11 - Próspera, Criciúma - SC, 88813-335"; // Substitua pelo endereço do seu estabelecimento
-    const apiKey = "AIzaSyCKk-oo_LmFnLh361pMbFrs2SliWEL9ISo"; 
 
-    const distanceMatrixUrl = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(address)}&destinations=${encodeURIComponent(yourAddress)}&key=${apiKey}`;
-
-    fetch(distanceMatrixUrl)
-        .then(response => response.json())
-        .then(data => {
-            // Verificar se a resposta da API é válida
-            if (data.rows && data.rows.length > 0 && data.rows[0].elements && data.rows[0].elements.length > 0) {
-                const distanceText = data.rows[0].elements[0].distance.text; // Distância em texto (ex: "5.2 km")
-                const distanceValue = data.rows[0].elements[0].distance.value; // Distância em metros
-
-                // Calcular o valor da entrega com base na distância (exemplo: R$ 1 por km)
-                const deliveryRatePerKm = 2.0; // Valor da entrega por quilômetro
-                const deliveryCost = (distanceValue / 1000) * deliveryRatePerKm; // Converter a distância de metros para quilômetros
-
-                // Atualizar o valor da entrega no seu cardápio digital (por exemplo, no elemento com ID 'cal-rota')
-                document.getElementById('cal-rota').textContent = `Distância: ${distanceText}, Taxa de Entrega: R$ ${deliveryCost.toFixed(2)}`;
-            } else {
-                console.error("Não foi possível obter informações da distância.");
-            }
-        })
-        .catch(error => {
-            console.error("Erro ao calcular a distância:", error);
-        });
-});
+function initMap() {
+    let clienteInput = addressInput.value; 
+    
+    const enderecoCliente = "Rua florianopolis, demboski içara"; 
+    
+    const service = new google.maps.DistanceMatrixService();
+    
+    const enderecoDestino = "R. Eng. Loja, 11 - Próspera, Criciúma - SC, 88813-335";
+    
+    const request = {
+      origins: [enderecoCliente],
+      destinations: [enderecoDestino],
+      travelMode: google.maps.TravelMode.DRIVING,
+      unitSystem: google.maps.UnitSystem.METRIC,
+      avoidHighways: false,
+      avoidTolls: false,
+    };
+    
+    service.getDistanceMatrix(request).then((response) => {
+      const distanciaMetros = response.rows[0].elements[0].distance.value;
+      const distanciaKm = distanciaMetros / 1000;
+      const taxaEntrega = distanciaKm * 2;
+    
+      console.log(`A taxa de entrega é de R$ ${taxaEntrega.toFixed(2)}.`);
+    });
+  }
