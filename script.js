@@ -16,15 +16,18 @@ let cart = [];
 cartBtn.addEventListener("click", function () {
     updateCartModal();
     cartModal.style.display = "flex";
+    document.body.classList.add("overflow-hidden", "fixed");
 });
 
 cartModal.addEventListener("click", (event) => {
     if (event.target === cartModal) {
         cartModal.style.display = "none"
+        document.body.classList.add("overflow-hidden", "fixed");
     }
 })
 closeModalBtn.addEventListener("click", () => {
     cartModal.style.display = "none"
+    document.body.classList.add("overflow-hidden", "fixed");
 })
 popularItens.addEventListener("click", (event) => {
     let parentButton = event.target.closest(".add-to-cart-btn");
