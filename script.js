@@ -22,12 +22,12 @@ cartBtn.addEventListener("click", function () {
 cartModal.addEventListener("click", (event) => {
     if (event.target === cartModal) {
         cartModal.style.display = "none"
-        document.body.classList.add("overflow-hidden", "fixed");
+        document.body.classList.remove("overflow-hidden", "fixed");
     }
 })
 closeModalBtn.addEventListener("click", () => {
     cartModal.style.display = "none"
-    document.body.classList.add("overflow-hidden", "fixed");
+    document.body.classList.remove("overflow-hidden", "fixed");
 })
 popularItens.addEventListener("click", (event) => {
     let parentButton = event.target.closest(".add-to-cart-btn");
