@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKk-oo_LmFnLh361pMbFrs2SliWEL9ISo&callback=initMap"   defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKk-oo_LmFnLh361pMbFrs2SliWEL9ISo" ></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -252,7 +252,7 @@
         <div class=" bg-white p-5 rounded-md min-w-[90%] md:min-w-[600px]">
             <h2 class="text-center font-bold text-2xl mb-2">Meu Carrinho</h2>
 
-            <div id="cart-items" class="flex justify-between mb-2 flex-col"></div>
+            <div id="cart-items" class="flex justify-between mb-2 flex-col overflow-y-auto max-h-60"></div>
 
             <p class="font-bold">Total <span id="cart-total">0.00</span></p>
             <p class="font-bold mt-4">Nome:</p>
@@ -261,7 +261,7 @@
             <input type="text" placeholder="Digite seu enereço" id="address" class="w-full border-2 p-1 rounded my-1" />
             <p class="text-red-500 hidden" id="address-warn">Digite seu endereço completo!</p>
             <p class=" text-bold" id="cal-rota"></p>
-            <button id="calculate-route-btn" class="bg-blue-500">Calcular Rota</button>
+            <button id="calculate-route-btn" class="bg-blue-500" onclick="initMap()" >Calcular Rota</button>
             <div class="flex items-center justify-between mt-5 w-full">
                 <button id="close-modal-btn">fecha</button>
                 <button id="checkout-btn" class="bg-green-500 text-white px-4 py-1 rounded">finalizar pedido</button>
@@ -271,7 +271,7 @@
     <!--fim Modal-->
     <footer class="w-full bg-purple-800 py-3 fixed bottom-0 z-50 flex items-center ">
         <button class="w-full flex items-center gap-2 text-white font-bold justify-between  sm:mr-2 ml-2" id="cart-btn">
-            <i class="fa fa-shopping-bag text-lg text-white ml-2"><span id="cart-count">0</span></i>
+            <i class="fa fa-shopping-bag text-lg text-white ml-2"><span class="ml-1" id="cart-count">0</span></i>
             VER SACOLA
             <span id="total-footer" class="text-[10px] font-thin mr-2">R$00.00</span>
         </button>
