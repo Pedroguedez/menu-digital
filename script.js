@@ -214,7 +214,7 @@ if(isOpen){
 function initMap() {
     let clienteInput = addressInput.value; 
     
-    const enderecoCliente = "Rua atilio daminelle, nossa senhora de fatima"; 
+    const enderecoCliente = "Rua atilio daminelle, nossa senhora de fatima içara"; 
     
     const service = new google.maps.DistanceMatrixService();
     
