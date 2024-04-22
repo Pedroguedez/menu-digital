@@ -217,7 +217,7 @@ if(isOpen){
 function initMap() {
     let clienteInput = addressInput.value; 
     
-    const enderecoCliente = "Rua atilio daminelle, nossa senhora de fatima içara"; 
+    const enderecoCliente = clienteInput; 
     
     const service = new google.maps.DistanceMatrixService();
     
@@ -237,6 +237,7 @@ function initMap() {
       const distanciaKm = distanciaMetros / 1000;
       const taxaEntrega = distanciaKm * 2;
     
-      console.log(`A taxa de entrega é de R$ ${taxaEntrega.toFixed(2)}.`);
+       const tEntrega = document.getElementById("cal-rota");
+       tEntrega.innerHTML = `A taxa de entrega é de R$ ${taxaEntrega.toFixed(2)}.`;
     });
   }
