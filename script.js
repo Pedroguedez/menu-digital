@@ -11,33 +11,48 @@ const footerTotal = document.getElementById("total-footer");
 const addressInput = document.getElementById("address");
 const addressWarn = document.getElementById("address-warn");
 
+const acaiModal = document.getElementById("myModal");
+const closeModalAcai = document.getElementById("closeModal");
 let cart = [];
 
 cartBtn.addEventListener("click", function () {
     updateCartModal();
     cartModal.style.display = "flex";
-    document.body.classList.add("overflow-hidden", "fixed");
+    document.body.classList.add("overflow-hidden");
+    setTimeout(function () {
+        cartModal.classList.remove("translate-y-full");
+    }, 100);
 });
 
 cartModal.addEventListener("click", (event) => {
     if (event.target === cartModal) {
         cartModal.style.display = "none"
-        document.body.classList.remove("overflow-hidden", "fixed");
+        document.body.classList.remove("overflow-hidden");
     }
 })
 closeModalBtn.addEventListener("click", () => {
     cartModal.style.display = "none"
-    document.body.classList.remove("overflow-hidden", "fixed");
+    document.body.classList.remove("overflow-hidden");
 })
 popularItens.addEventListener("click", (event) => {
     let parentButton = event.target.closest(".add-to-cart-btn");
     if (parentButton) {
-        const name = parentButton.getAttribute("data-name")
-        const price = parseFloat(parentButton.getAttribute("data-price"))
-
+        const name = parentButton.getAttribute("data-name");
+        const price = parseFloat(parentButton.getAttribute("data-price"));
+        const category = parentButton.getAttribute("data-category");
+        if(name != 'Montagem'){
         addToCart(name, price)
+        }
+        if(name == 'Montagem' && category == 'Acai'){
+            acaiModal.style.display = "flex";
+        }
     }
 });
+
+closeModalAcai.addEventListener("click", () => {
+    acaiModal.style.display = "none"
+})
+
 menu.addEventListener("click", (event) => {
     let parentButton = event.target.closest(".add-to-cart-btn");
     if (parentButton) {
@@ -75,16 +90,18 @@ function updateCartModal() {
         cartItemElement.classList.add("flex", "justify-between", "mb-4", "flex-col")
 
         cartItemElement.innerHTML = `
-        <div class="flex items-center justify-between">
-            <div>
+          <div class="flex items-center justify-between gap-2 p-4 rounded-md shadow-sm hover:shadow-lg transition duration-300">
+            <div class="flex items-center">
+            <p>${item.quantity} x</p>
             <p  class="font-medium">${item.name}</p>
-            <p>Qtd: ${item.quantity}</p>
-            <p class="font-medium mt-2">${item.price.toFixed(2)}</p>
             </div>   
                  
+            <div class="flex items-center justify-center gap-2">
+            <p class="font-medium ">${item.price.toFixed(2)}</p>
             <button class="remove-btn-item text-red-600" data-name="${item.name}">
-                Remover
-            </button>    
+             <i class=" fa fa-circle-minus  text-lg text-red-500"></i> 
+            </button>
+            </div>     
         </div>        
         `;
 
@@ -103,9 +120,9 @@ function updateCartModal() {
 
 }
 
-cartItemsContainer.addEventListener("click", function(){
-    if(event.target.classList.contains("remove-btn-item")){
-        const name = event.target.getAttribute("data-name")
+cartItemsContainer.addEventListener("click", function(event){
+    if(event.target.classList.contains("remove-btn-item") || event.target.closest(".remove-btn-item")){
+        const name = event.target.closest(".remove-btn-item").getAttribute("data-name")
 
         removeItemCart(name);
     }
