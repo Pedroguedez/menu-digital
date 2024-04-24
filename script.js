@@ -10,13 +10,15 @@ const cartCounter = document.getElementById("cart-count");
 const footerTotal = document.getElementById("total-footer");
 const addressInput = document.getElementById("address");
 const addressWarn = document.getElementById("address-warn");
-
+const calcRotaBtn = document.getElementById("calculate-route-btn");
+const tEntrega = document.getElementById("cal-rota");
 const acaiModal = document.getElementById("myModal");
 const closeModalAcai = document.getElementById("closeModal");
 let cart = [];
 
 cartBtn.addEventListener("click", function () {
     updateCartModal();
+    calculaTotal()
     cartModal.style.display = "flex";
     document.body.classList.add("overflow-hidden");
     setTimeout(function () {
@@ -24,6 +26,23 @@ cartBtn.addEventListener("click", function () {
     }, 100);
 });
 
+const btnReceberPedido = document.getElementById("btnReceberPedido");
+const modalQustiOn = document.getElementById("questiOn");
+const closeModalQusti = document.getElementById("close-btn-qusti");
+
+btnReceberPedido.addEventListener("click", function () {
+    modalQustiOn.style.display = "flex";
+})
+
+modalQustiOn.addEventListener("click", (event) => {
+    if (event.target === modalQustiOn) {
+        modalQustiOn.style.display = "none"
+    }
+})
+closeModalQusti.addEventListener("click", () => {
+    modalQustiOn.style.display = "none"
+
+})
 cartModal.addEventListener("click", (event) => {
     if (event.target === cartModal) {
         cartModal.style.display = "none"
@@ -40,10 +59,10 @@ popularItens.addEventListener("click", (event) => {
         const name = parentButton.getAttribute("data-name");
         const price = parseFloat(parentButton.getAttribute("data-price"));
         const category = parentButton.getAttribute("data-category");
-        if(name != 'Montagem'){
-        addToCart(name, price)
+        if (name != 'Montagem') {
+            addToCart(name, price)
         }
-        if(name == 'Montagem' && category == 'Acai'){
+        if (name == 'Montagem' && category == 'Acai') {
             acaiModal.style.display = "flex";
         }
     }
@@ -108,33 +127,33 @@ function updateCartModal() {
         total += item.price * item.quantity
         cartItemsContainer.appendChild(cartItemElement)
     })
-    cartTotal.textContent = total.toLocaleString("pt-BR",{ 
+    cartTotal.textContent = total.toLocaleString("pt-BR", {
         style: "currency",
         currency: "BRL"
     })
     cartCounter.innerText = cart.length;
-    footerTotal.textContent = total.toLocaleString("pt-BR",{ 
+    footerTotal.textContent = total.toLocaleString("pt-BR", {
         style: "currency",
         currency: "BRL"
     })
-
+    calculaTotal();
 }
 
-cartItemsContainer.addEventListener("click", function(event){
-    if(event.target.classList.contains("remove-btn-item") || event.target.closest(".remove-btn-item")){
+cartItemsContainer.addEventListener("click", function (event) {
+    if (event.target.classList.contains("remove-btn-item") || event.target.closest(".remove-btn-item")) {
         const name = event.target.closest(".remove-btn-item").getAttribute("data-name")
 
         removeItemCart(name);
     }
 })
 
-function removeItemCart(name){
+function removeItemCart(name) {
     const index = cart.findIndex(item => item.name === name);
 
-    if(index !== -1){
+    if (index !== -1) {
         const item = cart[index];
 
-        if(item.quantity > 1){
+        if (item.quantity > 1) {
             item.quantity -= 1;
             updateCartModal()
             return;
@@ -148,43 +167,52 @@ function removeItemCart(name){
 addressInput.addEventListener("input", (event) => {
     let inputValue = event.target.value;
 
-    if(inputValue !== ""){
+    if (inputValue !== "") {
         addressInput.classList.remove("border-red-500")
         addressWarn.classList.add("hidden")
     }
-    
-})
 
+})
+calcRotaBtn.addEventListener("click", () => {
+    if (addressInput.value === "") {
+        addressWarn.classList.remove("hidden")
+        addressInput.classList.add("border-red-500")
+        return;
+    } else {
+        initMap();
+        document.getElementById('enderecoClinte').style.display = "none";
+        document.getElementById('textoTimeDelivery').innerText =
+            'Entrega em 20-60 minutos ';
+        calculaTotal()
+    }
+})
 
 //finalizar pedido
 checkoutBtn.addEventListener("click", () => {
 
-     const isOpen = checkHourRestaurant();
+    const isOpen = checkHourRestaurant();
 
-     if(!isOpen){
+    if (!isOpen) {
         Toastify({
             text: "Ops o restaurante está fechado no momento!",
             duration: 3000,
             close: true,
-            gravity: "top", 
-            position: "right", 
-            stopOnFocus: true, 
+            gravity: "top",
+            position: "right",
+            stopOnFocus: true,
             style: {
-              background: "#ef4444",
-            },}).showToast();
-         return;
-     }
-
-    if(cart.length === 0 ) return;
-
-    if(addressInput.value === ""){
-        addressWarn.classList.remove("hidden")
-        addressInput.classList.add("border-red-500")
+                background: "#ef4444",
+            },
+        }).showToast();
         return;
     }
 
+    if (cart.length === 0) return;
+
+
+
     //enviar o pedido para api WHATS
-      const intro = `
+    const intro = `
     Olá, Point do Açaí,
 
     Gostaria de fazer um pedido do cardápio digital. Segue a lista dos itens que desejo:
@@ -212,7 +240,7 @@ checkoutBtn.addEventListener("click", () => {
     updateCartModal();
 })
 
-function checkHourRestaurant(){
+function checkHourRestaurant() {
     const data = new Date()
     const hora = data.getHours();
     return hora >= 11 && hora < 22;
@@ -222,39 +250,79 @@ function checkHourRestaurant(){
 const spanItem = document.getElementById("date-span")
 const isOpen = checkHourRestaurant();
 
-if(isOpen){
+if (isOpen) {
     spanItem.classList.remove("bg-red-500");
     spanItem.classList.add("bg-green-600");
-}else{
+} else {
     spanItem.classList.remove("bg-green-600");
     spanItem.classList.add("bg-red-500");
 }
 
 
 function initMap() {
-    let clienteInput = addressInput.value; 
-    
-    const enderecoCliente = clienteInput; 
-    
+    let clienteInput = addressInput.value;
+
+    const enderecoCliente = clienteInput;
+
     const service = new google.maps.DistanceMatrixService();
-    
+
     const enderecoDestino = "R. Eng. Loja, 11 - Próspera, Criciúma - SC, 88813-335";
-    
+
     const request = {
-      origins: [enderecoCliente],
-      destinations: [enderecoDestino],
-      travelMode: google.maps.TravelMode.DRIVING,
-      unitSystem: google.maps.UnitSystem.METRIC,
-      avoidHighways: false,
-      avoidTolls: false,
+        origins: [enderecoCliente],
+        destinations: [enderecoDestino],
+        travelMode: google.maps.TravelMode.DRIVING,
+        unitSystem: google.maps.UnitSystem.METRIC,
+        avoidHighways: false,
+        avoidTolls: false,
     };
-    
+
     service.getDistanceMatrix(request).then((response) => {
-      const distanciaMetros = response.rows[0].elements[0].distance.value;
-      const distanciaKm = distanciaMetros / 1000;
-      const taxaEntrega = distanciaKm * 2;
-    
-       const tEntrega = document.getElementById("cal-rota");
-       tEntrega.innerHTML = `A taxa de entrega é de R$ ${taxaEntrega.toFixed(2)}.`;
+        const distanciaMetros = response.rows[0].elements[0].distance.value;
+        const distanciaKm = distanciaMetros / 1000;
+        const taxaEntrega = distanciaKm * 2;
+
+        tEntrega.innerHTML = `${taxaEntrega.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL"
+        })}`;
     });
-  }
+}
+
+document.getElementById('confirmDelivery').addEventListener('click', function () {
+    modalQustiOn.style.display = "none";
+    const selectedOption = document.querySelector('input[name="delivery-option"]:checked');
+    if (selectedOption) {
+        cartItemsContainer.innerHTML = '';
+
+        console.log('Opção de entrega selecionada:', selectedOption.parentElement.querySelector('p').textContent);
+        let formaSelecionada = selectedOption.parentElement.querySelector('p').textContent
+        if (formaSelecionada == "Entrega") {
+            document.getElementById('enderecoClinte').style.display = "flex";
+        } else if (formaSelecionada == "Retirada") {
+            document.getElementById('textoTimeDelivery').innerText =
+                'Retirar em 15-40 minutos'
+        }
+    } else {
+        console.log('Nenhuma opção de entrega selecionada.');
+    }
+});
+
+function calculaTotal() {
+    // Obtém os valores das strings e remove caracteres não numéricos
+    const subtotal = parseFloat(cartTotal.textContent.replace(/[^\d,-]/g, '').replace(',', '.'));
+    let taxaEntrega = parseFloat(tEntrega.textContent.replace(/[^\d,-]/g, '').replace(',', '.'));
+
+    if (isNaN(taxaEntrega) || !tEntrega.textContent.trim()) {
+        taxaEntrega = 0;
+    }
+ 
+    const totalGeral = subtotal + taxaEntrega;
+    const formattedTotal = `R$ ${totalGeral.toFixed(2).replace('.', ',')}`;
+ 
+    document.getElementById("cart-total-geral").textContent = formattedTotal;
+
+    console.log('Subtotal:', subtotal);
+    console.log('Taxa de Entrega:', taxaEntrega);
+    console.log('Total Geral:', totalGeral);
+}
