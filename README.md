@@ -59,6 +59,8 @@ npm run dev
 * [Javascript](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide)
 * [Tailwind](https://v2.tailwindcss.com/docs)
 * [Html](https://developer.mozilla.org/pt-BR/docs/Web/HTML)
+* [PHP]
+* [Mysql]
 
 ### ⚖️ License
 This project is under: [MIT License]
